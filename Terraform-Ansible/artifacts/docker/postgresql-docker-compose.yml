@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+    database:
+        image: "postgres"
+        ports:
+            - "5342:5342"
+        container_name: postgresql
+        env_file:
+            - database.env
+        volumes:
+            - database-data:/var/lib/postgresql/data/
+        networks:
+            - app-network
+			
+volumes:
+    database-data:
+        driver: local
+
+networks:
+    app-network:
+        driver: bridge
+
