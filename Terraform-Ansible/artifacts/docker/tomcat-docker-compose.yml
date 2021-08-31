@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+    web:
+        image: 'tomcat:jdk8-adoptopenjdk-openj9'
+        container_name: tomcat
+        ports:
+            - "8888:8080"
+        volumes:
+            - webdata:/usr/local/tomcat
+            - /etc/playbooks/webapps/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+            - /etc/playbooks/webapps:/usr/local/tomcat/webapps
+        networks:
+            - app-network
+volumes:
+    webdata:
+        driver: local
+
+networks:
+    app-network:
+        driver: bridge

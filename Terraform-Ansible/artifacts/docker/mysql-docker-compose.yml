@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+    mysql:
+        image: 'percona:8.0'
+        container_name: db-master
+        ports:
+            - "3306:3306"
+        volumes:
+            - omsdata:/var/lib/mysql
+            - ./etc/playbooks/mysql/master.cnf:/etc/my.cnf.d/repl.cnf
+            - ./etc/playbooks/mysql/master.sql:/docker-entrypoint-initdb.d/start.sql
+        env_file:
+            - db-variables.env
+        networks:
+            - app-network
+volumes:
+    omsdata:
+        driver: local
+           
+networks:
+    app-network:
+        driver: bridge
+
+

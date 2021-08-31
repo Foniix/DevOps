@@ -1,0 +1,4 @@
+CREATE USER lv590@'%' IDENTIFIED WITH mysql_native_password BY 'Pa$$lv590';
+GRANT REPLICATION SLAVE ON *.* TO lv590@'%';
+GRANT ALL ON *.* TO lv590@'%';
+CREATE DATABASE oms3;

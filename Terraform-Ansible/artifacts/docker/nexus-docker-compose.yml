@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+    nexus:
+        image: sonatype/nexus3:latest
+        ports:
+            - "8081:8081"
+            - "8123:8123"
+        volumes:
+            - nexus-data:/nexus-data
+        networks:
+            - app-network
+
+volumes:
+    nexus-data:
+        driver: local
+
+networks:
+    app-network:
+        driver: bridge
+    
