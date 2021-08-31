@@ -1,0 +1,22 @@
+---
+- name: Install PHP7
+  hosts: localhost
+  become: yes
+  become_method: sudo
+  gather_facts: true
+  tags: [php7]
+  tasks:
+        - name: Install epel and yum-utils
+          shell: "yum -y install epel-release.noarch yum-utils"
+
+        - name: enable Remi repositories
+          shell: "yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm"
+
+        - name: configure PHP 7.3 repository
+          shell: "yum-config-manager --enable remi-php73"
+
+        - name: Install PHP7
+          shell: "yum -y install php"
+  
+        - name: Install PHP7-fmp
+          shell: "yum -y install php php-fpm  php-gd php-mysqlnd php-json php-gd php-imagick php-pgsql php-intl"

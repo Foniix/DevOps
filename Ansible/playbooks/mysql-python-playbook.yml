@@ -1,0 +1,10 @@
+---
+- name: Install MySQL-python
+  hosts: localhost
+  become: yes
+  become_method: sudo
+  gather_facts: true
+  tags: [database]
+  tasks:
+  - name: Install
+    shell: "yum install -y MySQL-python"

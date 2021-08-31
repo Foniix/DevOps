@@ -1,0 +1,35 @@
+---
+- name: Install MySQL database server
+  hosts: localhost
+  become: yes
+  become_method: sudo
+  gather_facts: true
+  tags: [database]
+  tasks:
+        - name: Update the software package repository
+          yum:
+                update_cache: yes
+
+        - name: Download sources
+          get_url:
+            url: http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+            dest: /tmp
+
+        - name: Install package
+          yum:
+            name: /tmp/mysql-community-release-el7-5.noarch.rpm
+            state: present
+
+        - name: Install MySQL
+          yum: name=mysql-server state=installed
+          with_items:
+              - mysql-server
+              - mysql-client
+              - python-mysqldb
+
+        - name: Start MySQL
+          shell: "systemctl start mysqld"
+        - name: Enable MySQL
+          shell: "systemctl enable mysqld"
+        - name: Create user and db
+          shell: "mysql -u root < db.sql"

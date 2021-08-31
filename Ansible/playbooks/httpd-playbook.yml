@@ -1,0 +1,20 @@
+---
+- name: Install httpd
+  hosts: localhost
+  become: yes
+  become_method: sudo
+  gather_facts: true
+  tags: [httpd]
+  tasks:
+    - package: "name=httpd state=present"
+    - service: "name=httpd state=started"
+    - name: Enable httpd
+      shell : systemctl enable httpd
+
+    - name: Firewall config
+      shell: |
+        firewall-cmd --add-service=http
+        firewall-cmd --permanent --add-service=http
+        firewall-cmd --reload
+        iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+        service iptables save

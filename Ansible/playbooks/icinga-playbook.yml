@@ -1,0 +1,40 @@
+---
+- name: Install Icinga
+  hosts: localhost
+  become: yes
+  become_method: sudo
+  gather_facts: true
+  tags: [icinga]
+  tasks:
+    - name:  import the archive key
+      shell: |
+        yum install -y wget
+        rpm --import http://packages.icinga.org/icinga.key
+        wget http://packages.icinga.org/epel/ICINGA-release.repo -O /etc/yum.repos.d/ICINGA-release.repo
+        sudo yum install -y https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm
+
+    - name: insatll icinga 2
+      shell: |
+        yum install -y icinga2
+        systemctl enable icinga2
+        systemctl start icinga2
+
+    - name: Install MySQL IDO
+      shell: |
+        yum install -y icinga2-ido-mysql
+        mysql -u root < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+        icinga2 feature enable ido-mysql
+
+    - name: Insatll icinga 2 web
+      shell: |
+        sudo yum install -y icinga2-ido-mysql icingaweb2 icingacli nagios-plugins-all
+        sudo systemctl restart httpd.service
+        sudo systemctl start icinga2.service
+        sudo systemctl enable icinga2.service
+        sudo systemctl start rh-php71-php-fpm.service
+        sudo systemctl enable rh-php71-php-fpm.service
+
+    - name: Create token
+      shell: |
+        icingacli setup token create
+        icingacli setup token show
